@@ -31,20 +31,20 @@ incorporate it into the Rails unit testing framework.
     end
   end
 
-Note the +DbPurge.start+ method takes an optional parameter that indicates the
-tableset that the tests use and thus the tables that will be cleaned. If unspecified
-the +:default+ tableset is used.
+Note the <tt>DbPurge.start</tt> method takes an optional parameter that indicates the
+table set that the tests use and thus the tables that will be cleaned. If unspecified
+the <tt>:default</tt> table set is used.
 
 == Tests that use a transaction
 
-A test can indicate that it uses a transaction by invoking +DbPurge.uses_transaction+
-between the invocation of +DbPurge.start+ and +DbPurge.finish+. This will ensure that
+A test can indicate that it uses a transaction by invoking <tt>DbPurge.uses_transaction</tt>
+between the invocation of <tt>DbPurge.start</tt> and <tt>DbPurge.finish</tt>. This will ensure that
 the next test attempts to clean the database.
 
 == Configuring the clean action
 
-The clean action attempts to issue a +DELETE FROM+ SQL statement for every table in the
-tableset supplied to the +DbPurge.start+ method. The tableset also defines the order
+The clean action attempts to issue a <tt>DELETE FROM</tt> SQL statement for every table in the
+table set supplied to the <tt>DbPurge.start</tt> method. The table set also defines the order
 in which tables are deleted.
 
 e.g.
