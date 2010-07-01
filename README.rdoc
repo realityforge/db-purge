@@ -1,0 +1,62 @@
+= db-purge
+
+DbPurge is a plugin that designed to reset your database to a pristine state
+prior to running tests. The plugin assumes ActiveRecord is used to communicate 
+with the database.
+
+DbPurge wraps each test in a transaction and rolls the transaction back at the
+end of the test. Before the first test runs the plugin will also attempt to
+clean the database. The plugin will also clean the database if it is told that
+a test uses a transaction internally. The clean action deletes rows from databases
+in an order configured by the plugin user. 
+
+== Integration with a test framework
+
+To integrate with a test framework, DbPurge requires that two methods be called
+at the start and at the end of the test. The following demonstrates how to
+incorporate it into the Rails unit testing framework.
+
+  class ActiveSupport::TestCase
+    protected
+
+    self.setup :setup_db_purge
+    self.teardown :teardown_db_purge
+
+    def setup_db_purge
+      DbPurge.start
+    end
+
+    def teardown_db_purge
+      DbPurge.finish
+    end
+  end
+
+Note the +DbPurge.start+ method takes an optional parameter that indicates the
+tableset that the tests use and thus the tables that will be cleaned. If unspecified
+the +:default+ tableset is used.
+
+== Tests that use a transaction
+
+A test can indicate that it uses a transaction by invoking +DbPurge.uses_transaction+
+between the invocation of +DbPurge.start+ and +DbPurge.finish+. This will ensure that
+the next test attempts to clean the database.
+
+== Configuring the clean action
+
+The clean action attempts to issue a +DELETE FROM+ SQL statement for every table in the
+tableset supplied to the +DbPurge.start+ method. The tableset also defines the order
+in which tables are deleted.
+
+e.g.
+
+  # Define the default table set used when no parameter passed to start
+  DbPurge.define_tableset(:default, [:tblSubPart, :tblComponent])
+
+  # Define the table set used when :audit parameter passed to start
+  DbPurge.define_tableset(:audit, [:tblLogEntry, :tblLogSession])
+
+== Credit
+
+The gem was initially developed as by StockSoftware for use in the Department
+of Sustainability and Environment, Victoria, Australia. It was inspired by the
+database_cleaner plugin. See http://github.com/bmabey/database_cleaner
