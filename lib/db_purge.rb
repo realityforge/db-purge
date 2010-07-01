@@ -40,7 +40,7 @@ class DbPurge
     private
 
     def tableset_map
-      @tablesets ||= {}
+      @tablesets ||= {:default => []}
     end
 
     def clean(table_set_key)
