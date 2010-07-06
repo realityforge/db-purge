@@ -57,6 +57,6 @@ e.g.
 
 == Credit
 
-The gem was initially developed as by StockSoftware for use in the Department
+The gem was initially developed by StockSoftware for use in the Department
 of Sustainability and Environment, Victoria, Australia. It was inspired by the
 database_cleaner plugin. See http://github.com/bmabey/database_cleaner
