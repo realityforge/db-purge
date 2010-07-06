@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 Clean the database prior to tests with db-purge.
   TEXT
   spec.files          = Dir['{lib}/**/*', '*.gemspec'] +
-                        ['Rakefile']
+                        ['LICENSE', 'README.rdoc', 'CHANGELOG', 'Rakefile']
   spec.require_paths  = ['lib']
 
   spec.has_rdoc         = false
