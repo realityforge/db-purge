@@ -1,6 +1,8 @@
+require File.expand_path(File.dirname(__FILE__) + '/lib/db_purge/version')
+
 Gem::Specification.new do |spec|
   spec.name           = 'db-purge'
-  spec.version        = `git describe`.strip.split('-').first
+  spec.version        = DbPurge::Version::STRING
   spec.authors        = ['Peter Donald']
   spec.email          = ["peter@realityforge.org"]
   spec.homepage       = "http://github.com/stocksoftware/db-purge"
