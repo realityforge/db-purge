@@ -8,6 +8,7 @@ module DbPurge
     def uses_transaction
       raise "Attempted to call uses_transaction without starting session" if !@active
       @clean = false
+      rollback_transaction
     end
 
     def start(table_set_key = :default)
@@ -15,6 +16,21 @@ module DbPurge
       #puts "DbCleaner.start"
       clean(table_set_key)
       @active = true
+      start_transaction
+    end
+
+    def finish
+      raise "Attempted to finish database cleaner without starting session" if !@active
+      #puts "DbCleaner.finish"
+      @active = false
+      rollback_transaction if @in_transaction
+    end
+
+    private
+
+    def start_transaction
+      raise "Attempted to start a transaction while already in transaction" if @in_transaction
+      @in_transaction = true
       if ActiveRecord::Base.connection.respond_to?(:increment_open_transactions)
         ActiveRecord::Base.connection.increment_open_transactions
       else
@@ -24,10 +40,9 @@ module DbPurge
       ActiveRecord::Base.connection.begin_db_transaction
     end
 
-    def finish
-      raise "Attempted to finish database cleaner without starting session" if !@active
-      #puts "DbCleaner.finish"
-      @active = false
+    def rollback_transaction
+      raise "Attempted to rollback a transaction while not in a transaction" if !@in_transaction
+      @in_transaction = false
       ActiveRecord::Base.connection.rollback_db_transaction
 
       if ActiveRecord::Base.connection.respond_to?(:decrement_open_transactions)
@@ -36,8 +51,6 @@ module DbPurge
         ActiveRecord::Base.__send__(:decrement_open_transactions)
       end
     end
-
-    private
 
     def tableset_map
       @tablesets ||= {:default => []}
