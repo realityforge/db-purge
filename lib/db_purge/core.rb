@@ -58,7 +58,7 @@ module DbPurge
     end
 
     def clean(table_set_key)
-      if !@clean
+      unless @clean
         #puts "DbCleaner.clean"
         tables = tableset_map[table_set_key]
         raise "Unable to locate tableset #{table_set_key.inspect}" unless tables
