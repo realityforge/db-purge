@@ -32,25 +32,15 @@ module DbPurge
     def start_transaction
       raise "Attempted to start a transaction while already in transaction" if @in_transaction
       @in_transaction = true
-      if ActiveRecord::Base.connection.respond_to?(:increment_open_transactions)
-        ActiveRecord::Base.connection.increment_open_transactions
-      else
-        ActiveRecord::Base.__send__(:increment_open_transactions)
-      end
-
+      ActiveRecord::Base.connection.increment_open_transactions
       ActiveRecord::Base.connection.begin_db_transaction
     end
 
     def rollback_transaction
       raise "Attempted to rollback a transaction while not in a transaction" if !@in_transaction
       @in_transaction = false
+      ActiveRecord::Base.connection.decrement_open_transactions
       ActiveRecord::Base.connection.rollback_db_transaction
-
-      if ActiveRecord::Base.connection.respond_to?(:decrement_open_transactions)
-        ActiveRecord::Base.connection.decrement_open_transactions
-      else
-        ActiveRecord::Base.__send__(:decrement_open_transactions)
-      end
     end
 
     def tableset_map
