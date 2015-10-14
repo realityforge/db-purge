@@ -7,6 +7,7 @@ module DbPurge
 
     def uses_transaction
       raise "Attempted to call uses_transaction without starting session" if !@active
+      #puts 'DbCleaner.uses_transaction'
       @clean = false
       rollback_transaction
     end
